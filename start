@@ -1,0 +1,34 @@
+#!/usr/bin/python
+
+import sys
+from django.core.management import setup_environ
+
+import ConfigParser, os, sys, re, string, tempfile
+from optparse import OptionParser
+
+import settings
+
+def usage():
+    print "Usage: ./start <interface>"
+    print
+    print "  Interface is usually hci0, but can also be hci1, hci2, ...; --help for more"
+    print
+    sys.exit(1)
+
+if __name__ == "__main__":
+    setup_environ(settings)
+
+    parser = OptionParser()
+    parser.add_option("-a", "--aggressive", action="store_true", help="Aggressive mode")
+
+    (options, args) = parser.parse_args()
+    
+    if len(args) != 1:
+        usage()
+
+    interface = args[0]
+
+    from spammer.spammer import SpammerMain
+
+    m = SpammerMain(interface, options.aggressive)
+    m.run()

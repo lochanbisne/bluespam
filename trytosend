@@ -1,0 +1,27 @@
+#!/usr/bin/python
+
+import sys
+from django.core.management import setup_environ
+import settings
+
+def usage():
+    print "Usage: ./sendschedule <interface> <device id> <schedule id> <normal|aggressive>"
+    print
+    print "  Interface is usually hci0, but can also be hci1, hci2, ..."
+    print "  device id and schedule id come from the database."
+    print
+    sys.exit(1)
+
+if __name__ == "__main__":
+    setup_environ(settings)
+
+    if len(sys.argv) != 5:
+        usage()
+
+    (interface, device_id, schedule_id, tpe) = sys.argv[1:]
+    aggressive = (tpe == "aggressive")
+
+    from spammer.spammer import SpammerMain
+
+    m = SpammerMain(interface)
+    m.trytosend(device_id, schedule_id, aggressive)
