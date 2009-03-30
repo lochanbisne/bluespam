@@ -1,0 +1,27 @@
+#!/usr/bin/python
+
+import sys
+from django.core.management import setup_environ
+
+import ConfigParser, os, sys, re, string, tempfile
+from optparse import OptionParser
+
+import settings
+
+def usage():
+    print "Usage: ./receive"
+    print
+    sys.exit(1)
+
+if __name__ == "__main__":
+    setup_environ(settings)
+
+    parser = OptionParser()
+    parser.add_option("-a", "--aggressive", action="store_true", help="Aggressive mode")
+
+    (options, args) = parser.parse_args()
+    
+    from spammer.receiver import Receiver
+
+    r = Receiver()
+    r.receive()
