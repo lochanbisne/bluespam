@@ -4,15 +4,15 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    # ('Arjan', 'arjan@scherpenisse.net'),
+    ('Arjan', 'arjan@scherpenisse.net'),
 )
 
 MANAGERS = ADMINS
 
 DATABASE_ENGINE = 'mysql'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'ado_mssql'.
-DATABASE_NAME = 'spammer'             # Or path to database file if using sqlite3.
-DATABASE_USER = 'spammer'             # Not used with sqlite3.
-DATABASE_PASSWORD = 'spam123'         # Not used with sqlite3.
+DATABASE_NAME = 'bluespam'             # Or path to database file if using sqlite3.
+DATABASE_USER = 'mobile'             # Not used with sqlite3.
+DATABASE_PASSWORD = 'mvn01'         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
@@ -40,9 +40,12 @@ USE_I18N = False
 # laptop
 #MEDIA_ROOT = '/home/arjan/devel-linux/spam/trunk/spam/media/'
 # zeus
-MEDIA_ROOT = '/home/arjan/devel/code/spam/trunk/spam/media/'
+#MEDIA_ROOT = '/home/arjan/devel/code/spam/trunk/spam/media/'
 # onsignal-1
 #MEDIA_ROOT = '/home/arjan/devel-linux/spam/trunk/spam/media/'
+# mvn
+MEDIA_ROOT = '/opt/spam/tags/1.0/spam/media/'
+
 
 # URL that handles the media served from MEDIA_ROOT.
 # Example: "http://media.lawrence.com"
@@ -54,7 +57,7 @@ MEDIA_URL = ''
 ADMIN_MEDIA_PREFIX = '/media/'
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = '89+j=872kd_1t*c4b11$sp_@8w26xqsh3-4wqd3s+12x218c^)'
+SECRET_KEY = 'adsf3322=872kd_1t*c4b11$sp_@8w26xqsh3-4wqd3s+12x218c^)'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -76,9 +79,11 @@ TEMPLATE_DIRS = (
     # laptop
     #"/home/arjan/devel-linux/spam/trunk/spam/site/templates"
     # zeus
-    "/home/arjan/devel/code/spam/trunk/spam/site/templates"
+    #"/home/arjan/devel/code/spam/trunk/spam/site/templates"
     # onsignal-1
     #"/home/arjan/devel/code/spam/trunk/spam/site/templates"
+    # mvn
+    "/opt/spam/tags/1.0/spam/site/templates"
     
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.

@@ -83,7 +83,7 @@ class BTComm:
     def send(self, device_id, number, channel, filename):
 
         # send file
-        cmd = "ussp-push %s@ %s %s" % (device_id, filename, filename.split("/")[-1])
+        cmd = "/usr/local/bin/ussp-push %s@ %s %s" % (device_id, "media/" + str(filename), str(filename).split("/")[-1])
         exitcode = os.system(cmd)
         print cmd
         print exitcode
