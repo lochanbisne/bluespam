@@ -27,7 +27,7 @@
 	<h1>{% block pagetitle %}BlueSpam{% endblock %}</h1>
 
 	<div class="controls">
-	    &copy;2008 <a href="http://www.on-signal.org/">on-signal</a>
+	    &copy;2008, 2009 <a href="http://www.scherpenisse.net/">Arjan Scherpenisse</a>
 	</div>
 
 

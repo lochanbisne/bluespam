@@ -65,7 +65,7 @@ class SpammerMain:
         self.log("Will send %s to %s" % (candidate, device), "-sender")
         
         # send the shizzle
-        exitcode = self.bt.send(device.device_id, channel.number, obexchannel, candidate.get_datafile_filename())
+        exitcode = self.bt.send(device.device_id, channel.number, obexchannel, str(candidate.datafile))
 
         if aggressive and exitcode > 0:
             exitcode = 768

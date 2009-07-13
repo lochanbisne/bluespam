@@ -1,4 +1,4 @@
-import sys, os, re
+import os, re
 
 
 class BTComm:
@@ -21,7 +21,6 @@ class BTComm:
         results = []
 
         device_r = re.compile("^Searching for OPUSH on (\w\w(:\w\w)+)")
-        srv_r = re.compile("OBEX Object Push")
         
         curdev = None
         supported = False
@@ -97,6 +96,7 @@ class BTComm:
 
         cmd = "sudo rfcomm release %s 2>& 1 > /dev/null" % (rfcomm)
         exitcode = os.system(cmd)
+        return exitcode
         
 
 if __name__ == "__main__":
