@@ -3,10 +3,10 @@ from datetime import datetime, timedelta
 
 
 class Device(models.Model):
-    device_id = models.CharField(_('Device identifier'), maxlength=40, primary_key=True)
-    name = models.CharField(_('Device name'), maxlength=255)
-    lastseen = models.DateTimeField(_('Last seen at'))
-    locked = models.BooleanField(_('Device locked'), default=False)
+    device_id = models.CharField('Device identifier', max_length=40, primary_key=True)
+    name = models.CharField('Device name', max_length=255)
+    lastseen = models.DateTimeField('Last seen at')
+    locked = models.BooleanField('Device locked', default=False)
     obexchannel = models.IntegerField(default=-1)
 
     def __str__(self):
@@ -80,8 +80,8 @@ class Device(models.Model):
     
 class DeviceSeenBy(models.Model):
     device = models.ForeignKey(Device)
-    interface = models.CharField(maxlength = 40)
-    lastseen = models.DateTimeField(_('Last seen at'))
+    interface = models.CharField(max_length = 40)
+    lastseen = models.DateTimeField('Last seen at')
 
     class Admin:
         pass
@@ -98,8 +98,8 @@ class Blacklist(models.Model):
     RETRY_BLACKLIST_TIME = timedelta(minutes = 2)
     
     device = models.ForeignKey(Device)
-    ban_from = models.DateTimeField(_('From'))
-    ban_until = models.DateTimeField(_('Until'))
+    ban_from = models.DateTimeField('From')
+    ban_until = models.DateTimeField('Until')
     ban_count = models.IntegerField(default = 1)
 
     def __str__(self):
@@ -121,35 +121,36 @@ class Schedule(models.Model):
     class Admin:
         pass
     
-    do_from = models.DateTimeField(_('From'))
-    do_until = models.DateTimeField(_('Until'))
-    schedule_type = models.CharField(_('Schedule type'), maxlength=20, choices=SCHEDULE_TYPE_CHOICES)
-    datafile = models.FileField(_('File (when type != text)'), upload_to = "data/")
+    do_from = models.DateTimeField('From')
+    do_until = models.DateTimeField('Until')
+    schedule_type = models.CharField('Schedule type', max_length=20, choices=SCHEDULE_TYPE_CHOICES)
+    datafile = models.FileField('File (when type != text)', upload_to = "data/")
 
     def __str__(self):
-        return "[%s]" % self.get_datafile_filename().split('/')[-1]
+        import os
+        return os.path.basename(str(self.datafile))
 
 
 class DeviceSent(models.Model):
     device = models.ForeignKey(Device)
     schedule = models.ForeignKey(Schedule)
     exitcode = models.IntegerField()
-    send_time = models.DateTimeField(_('Sent at'))
+    send_time = models.DateTimeField('Sent at')
 
     class Admin:
         pass
 
 class DeviceReceived(models.Model):
     device = models.ForeignKey(Device)
-    filename = models.CharField(maxlength=255)
-    recv_time = models.DateTimeField(_('Received at'))
+    filename = models.CharField(max_length=255)
+    recv_time = models.DateTimeField('Received at')
 
     class Admin:
         pass
 
 class InterfaceName(models.Model):
-    name = models.CharField(maxlength = 40, primary_key = True)
-    interface = models.CharField(maxlength = 40) # "all" for all interfaces
+    name = models.CharField(max_length = 40, primary_key = True)
+    interface = models.CharField(max_length = 40) # "all" for all interfaces
 
     def __str__(self):
         return "%s (for %s)" % (self.name, self.interface)

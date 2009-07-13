@@ -1,4 +1,5 @@
 # Django settings for spam project.
+import os
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -37,12 +38,7 @@ USE_I18N = False
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
 
-# laptop
-#MEDIA_ROOT = '/home/arjan/devel-linux/spam/trunk/spam/media/'
-# zeus
-MEDIA_ROOT = '/home/arjan/devel/code/spam/trunk/spam/media/'
-# onsignal-1
-#MEDIA_ROOT = '/home/arjan/devel-linux/spam/trunk/spam/media/'
+MEDIA_ROOT = os.path.dirname(__file__) + "/media/"
 
 # URL that handles the media served from MEDIA_ROOT.
 # Example: "http://media.lawrence.com"
@@ -73,16 +69,7 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'spam.urls'
 
 TEMPLATE_DIRS = (
-    # laptop
-    #"/home/arjan/devel-linux/spam/trunk/spam/site/templates"
-    # zeus
-    "/home/arjan/devel/code/spam/trunk/spam/site/templates"
-    # onsignal-1
-    #"/home/arjan/devel/code/spam/trunk/spam/site/templates"
-    
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
+    os.path.dirname(__file__) + "/site/templates"
 )
 
 INSTALLED_APPS = (
