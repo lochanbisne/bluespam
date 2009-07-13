@@ -24,8 +24,7 @@ No active devices found... is the scanner running?
 <ul>
     {% for schedule in active_schedules %}
     <li>
-	<strong> {{ schedule.datafile }} </strong> <br />
-	{{ schedule.do_from }} - {{ schedule.do_until }}
+	<strong> {{ schedule.datafile }} </strong>
     </li>
     {% endfor %}
 </ul>

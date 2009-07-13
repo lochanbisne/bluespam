@@ -5,15 +5,15 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    # ('Arjan', 'arjan@scherpenisse.net'),
+    ('Arjan', 'arjan@scherpenisse.net'),
 )
 
 MANAGERS = ADMINS
 
 DATABASE_ENGINE = 'mysql'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'ado_mssql'.
-DATABASE_NAME = 'spammer'             # Or path to database file if using sqlite3.
-DATABASE_USER = 'spammer'             # Not used with sqlite3.
-DATABASE_PASSWORD = 'spam123'         # Not used with sqlite3.
+DATABASE_NAME = 'bluespam'             # Or path to database file if using sqlite3.
+DATABASE_USER = 'mobile'             # Not used with sqlite3.
+DATABASE_PASSWORD = 'mvn01'         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
@@ -35,10 +35,12 @@ SITE_ID = 1
 # to load the internationalization machinery.
 USE_I18N = False
 
+SITE_ROOT = os.path.dirname(__file__)
+
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
+MEDIA_ROOT = SITE_ROOT + '/static/'
 
-MEDIA_ROOT = os.path.dirname(__file__) + "/media/"
 
 # URL that handles the media served from MEDIA_ROOT.
 # Example: "http://media.lawrence.com"
@@ -50,7 +52,7 @@ MEDIA_URL = ''
 ADMIN_MEDIA_PREFIX = '/media/'
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = '89+j=872kd_1t*c4b11$sp_@8w26xqsh3-4wqd3s+12x218c^)'
+SECRET_KEY = 'adsf3322=872kd_1t*c4b11$sp_@8w26xqsh3-4wqd3s+12x218c^)'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -69,7 +71,11 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'spam.urls'
 
 TEMPLATE_DIRS = (
-    os.path.dirname(__file__) + "/site/templates"
+    SITE_ROOT + "/site/templates"
+    
+    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
+    # Always use forward slashes, even on Windows.
+    # Don't forget to use absolute paths, not relative paths.
 )
 
 INSTALLED_APPS = (

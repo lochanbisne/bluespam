@@ -1,0 +1,4 @@
+#!/bin/sh
+sudo killall -9 start trytosend ussp-push rfcomm avahi-publish-service
+
+

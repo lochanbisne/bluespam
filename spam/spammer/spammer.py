@@ -1,4 +1,4 @@
-import sys, re, random, time, os
+import sys, re, random, time, os, signal
 from datetime import datetime, timedelta
 import django.db.models.base
 
@@ -32,12 +32,30 @@ class SpammerMain:
 
 
     def log(self, message, prefix = ""):
-        print "[%s %s] %s" % (datetime.now(), self.interface+prefix, message)
+        t = time.strftime("%X", datetime.now().timetuple())
+        print "[%s %s] %s" % (t, self.interface+prefix, message)
 
-
+    def cleanup_try(self, signal=None, action=None):
+        self.log("Interrupted... cleanup trytosend.")
+        
+        self.try_device.unlock()
+        if self.try_channel:
+            self.try_channel.unlock()
+        
     def trytosend(self, device_id, schedule_id, aggressive = False):
 
         device = Device.objects.filter(device_id = device_id)[0]
+        if not device.locked:
+            # prevent race conditions
+            self.log("Device shoud have been locked, bailing out")
+            return
+
+        self.try_device = device
+        self.try_channel = None
+        signal.signal(signal.SIGHUP, self.cleanup_try)
+        signal.signal(signal.SIGINT, self.cleanup_try)
+        signal.signal(signal.SIGTERM, self.cleanup_try)
+
         candidate = Schedule.objects.filter(id = schedule_id)[0]
 
         obexchannel = device.obexchannel
@@ -48,8 +66,6 @@ class SpammerMain:
             self.log("%s --> %s: No channel free, waiting to send...."
                      % (candidate, device))
 
-        device.lock()
-            
         while channel is None:
             count = count + 1
             if count > 60: # 2 minutes
@@ -61,11 +77,12 @@ class SpammerMain:
             channel = Channel.FindFree()
 
         channel.lock()
+        self.try_channel = channel
         
         self.log("Will send %s to %s" % (candidate, device), "-sender")
         
         # send the shizzle
-        exitcode = self.bt.send(device.device_id, channel.number, obexchannel, str(candidate.datafile))
+        exitcode = self.bt.send(device.device_id, channel.number, obexchannel, candidate.datafile)
 
         if aggressive and exitcode > 0:
             exitcode = 768
@@ -77,25 +94,27 @@ class SpammerMain:
     
         if exitcode == 0:
             # apparently it worked, clear blacklists so he'll receive more stuff
-            # device.un_blacklist()
-            b = device.blacklist(True) # retry some time soon
+            device.un_blacklist()
+            b = device.blacklist(True) # next item after a while
             self.log(">>> SENT OK! %s" % b, "-sender")
 
-        elif exitcode == BTComm.TIMEOUT or aggressive:
+        else:
             # timeout
-            b = device.blacklist(True) # retry some time soon
-            self.log("Device timeout, %s" % b, "-sender")
-            
-        elif exitcode == BTComm.REFUSE: # 2
-            # refused; blaclist him long time
-            b = device.blacklist(False)
-            self.log(">> Refused!!! %s" % b, "-sender")
+            b = device.blacklist(False) # retry 
+            self.log("Device / refuse, %s" % b, "-sender")
 
         device.unlock()
         channel.unlock()
 
 
     def run(self):
+        
+        self.resetState()
+        
+        signal.signal(signal.SIGHUP,  self.cleanup)
+        signal.signal(signal.SIGINT,  self.cleanup)
+        signal.signal(signal.SIGTERM, self.cleanup)
+        
         if (self.aggressive):
             self.sleeptime = self.sleeptime / 2
 
@@ -114,21 +133,27 @@ class SpammerMain:
                 time.sleep(self.sleeptime)
                 
         except KeyboardInterrupt:
-            self.bt.release()
-            for d in Device.objects.filter(locked = True):
-                self.log("Clearing lock on %s " % d)
-                d.unlock()
-            for c in Channel.objects.filter(locked = True):
-                self.log("Clearing lock on %s " % c)
-                c.unlock()
-                
+            self.cleanup()
+    
+    def resetState(self):
+        self.bt.release()
+        for d in Device.objects.filter(locked = True):
+            self.log("Clearing lock on %s " % d)
+            d.unlock()
+        for c in Channel.objects.filter(locked = True):
+            self.log("Clearing lock on %s " % c)
+            c.unlock()
+        
+    def cleanup(self, signal=None, action=None):
+        self.log("Interrupted... doing cleanup.")
+        self.resetState()
+        sys.exit(1)
 
-        pass
 
     def loop(self, schedulelist):
 
         # set interface name
-        names = SpammerMain.getInterfaceNames()
+        names = self.getInterfaceNames()
         if len(names)>0:
             name = random.choice(names)
             if (name != self.bt.name):
@@ -144,9 +169,16 @@ class SpammerMain:
         # update datbase
         self.updateDeviceData(devicedata)
         
+        if Channel.FindFree() is None:
+            self.log("No channels free for sending...")
+            return
+        
         # get list of active devices
         devicelist = self.getActiveDevices()
 
+        # and shuffle them
+        devicelist = random.sample(devicelist, len(devicelist))
+        
         # for each active device:
         for device in devicelist:
             
@@ -158,12 +190,15 @@ class SpammerMain:
             random.shuffle(candidates)
             for candidate in candidates:
                 if device.can_send(candidate):
+                    # lock
+                    device.lock()
+                    
                     # send in the background!
                     if self.aggressive:
                         tpe = "aggressive"
                     else:
                         tpe = "normal"
-                        
+                    
                     cmd = "./trytosend %s %s %s %s &" % (self.interface, device.device_id, candidate.id, tpe)
                     self.log(cmd)
                     os.system(cmd)
@@ -235,8 +270,7 @@ class SpammerMain:
         return [x for x in set] # force query execution
 
 
-    @staticmethod
-    def getInterfaceNames():
+    def getInterfaceNames(self):
         return [x.name for x in InterfaceName.objects.all() if x.interface == "all" or x.interface == self.interface]
 
     @staticmethod

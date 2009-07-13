@@ -11,12 +11,7 @@
 	
 	<link href="/media/css/base.css" rel="stylesheet" type="text/css" media="screen" />
 	<link href="/media/css/print.css" rel="stylesheet" type="text/css" media="print" />
-	<style>
-	    body { width: 960px; margin: auto; margin-top: 40px; }
-	    .column { float: left; width: 480px; }
-	    hr { margin-top: 20px; }
-	    div.controls { float: right; }
-	</style>
+	<link href="/static/base.css" rel="stylesheet" type="text/css" media="screen" />
 
 	<script type="text/javascript">
 	    setTimeout(function() { window.location.reload(); }, 5000);
@@ -24,10 +19,15 @@
     </head>
     
     <body>
-	<h1>{% block pagetitle %}BlueSpam{% endblock %}</h1>
+	<div id="heading">
 
-	<div class="controls">
-	    &copy;2008, 2009 <a href="http://www.scherpenisse.net/">Arjan Scherpenisse</a>
+	    <img src="/static/logo.gif" />
+
+	    <div class="top">
+		<h1>{% block pagetitle %}BlueSpam - bluetooth file distribution{% endblock %}</h1>
+		{% include "nav.tpl" %}
+	    </div>
+
 	</div>
 
 
@@ -35,6 +35,10 @@
 	
 	{% block content %}
 	{% endblock %}
+
+	<hr />
+	<p class="sub">&copy;2008, 2009 <a href="http://www.scherpenisse.net/">Arjan Scherpenisse</a>; this software is open source and released under the MIT license.</p>
+
     </body>
 </html>
 

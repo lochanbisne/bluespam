@@ -10,12 +10,14 @@ class Device(models.Model):
     obexchannel = models.IntegerField(default=-1)
 
     def __str__(self):
-        return "[%s] %s" % (self.device_id, self.name)
-
+        s = "[%s] %s" % (self.device_id, self.name)
+        if self.locked:
+            s += " (L)"
+        return s
 
     def can_send(self, schedule):
         # else, try again if not blacklisted
-        if self.is_blacklisted():
+        if self.is_blacklisted() or self.locked:
             return False
 
         # check if not successfully sent
@@ -39,6 +41,7 @@ class Device(models.Model):
                 num = max(l)+1
             else:
                 num = 1
+            num = min(num, max(Blacklist.REJECT_BLACKLIST_TIMES.keys()))
             until = frm + Blacklist.REJECT_BLACKLIST_TIMES[num]
         else:
             # retry
@@ -73,9 +76,6 @@ class Device(models.Model):
         self.locked = False
         self.save()
 
-    class Admin:
-        pass
-
         
     
 class DeviceSeenBy(models.Model):
@@ -83,19 +83,21 @@ class DeviceSeenBy(models.Model):
     interface = models.CharField(max_length = 40)
     lastseen = models.DateTimeField('Last seen at')
 
-    class Admin:
-        pass
-
     
 class Blacklist(models.Model):
 
-    REJECT_BLACKLIST_TIMES = { 1: timedelta(minutes = 5),
-                               2: timedelta(minutes = 15),
-                               3: timedelta(hours = 1),
-                               4: timedelta(days = 1),
-                               5: timedelta(weeks = 1) }
+    REJECT_BLACKLIST_TIMES = { 1: timedelta(minutes = 2),
+                               2: timedelta(minutes = 2),
+                               3: timedelta(minutes = 2),
+                               4: timedelta(minutes = 3),
+                               5: timedelta(minutes = 3),
+                               6: timedelta(minutes = 4),
+                               7: timedelta(minutes = 4),
+                               8: timedelta(minutes = 5),
+                               9: timedelta(minutes = 10),
+                               10: timedelta(hours = 1) }
     
-    RETRY_BLACKLIST_TIME = timedelta(minutes = 2)
+    RETRY_BLACKLIST_TIME = timedelta(minutes = 3)
     
     device = models.ForeignKey(Device)
     ban_from = models.DateTimeField('From')
@@ -104,31 +106,22 @@ class Blacklist(models.Model):
 
     def __str__(self):
         return "%s Banned until %s" % (self.device, self.ban_until)
-    
-    class Admin:
-        pass
 
 
 class Schedule(models.Model):
-
+    """ dddd """
+    
     SCHEDULE_TYPE_CHOICES = (
         ('text', 'Text message (.txt)'),
         ('photo', 'Photo (.jpg)'),
         ('video', 'Video (.3gp)'),
         ('sound', 'Sound (.mp3)'))
-        
 
-    class Admin:
-        pass
-    
-    do_from = models.DateTimeField('From')
-    do_until = models.DateTimeField('Until')
     schedule_type = models.CharField('Schedule type', max_length=20, choices=SCHEDULE_TYPE_CHOICES)
-    datafile = models.FileField('File (when type != text)', upload_to = "data/")
+    datafile = models.FileField('File', upload_to = "data/")
 
     def __str__(self):
-        import os
-        return os.path.basename(str(self.datafile))
+        return "[%s]" % str(self.datafile).split('/')[-1]
 
 
 class DeviceSent(models.Model):
@@ -137,16 +130,12 @@ class DeviceSent(models.Model):
     exitcode = models.IntegerField()
     send_time = models.DateTimeField('Sent at')
 
-    class Admin:
-        pass
-
+    
 class DeviceReceived(models.Model):
     device = models.ForeignKey(Device)
     filename = models.CharField(max_length=255)
     recv_time = models.DateTimeField('Received at')
 
-    class Admin:
-        pass
 
 class InterfaceName(models.Model):
     name = models.CharField(max_length = 40, primary_key = True)
@@ -154,17 +143,11 @@ class InterfaceName(models.Model):
 
     def __str__(self):
         return "%s (for %s)" % (self.name, self.interface)
-    
-    class Admin:
-        pass
 
 
 class Channel(models.Model):
     number = models.IntegerField()
     locked = models.BooleanField(default = False)
-
-    class Admin:
-        pass
 
     def FindFree():
         free = Channel.objects.filter(locked = False)
@@ -183,5 +166,5 @@ class Channel(models.Model):
         self.save()
 
     def __str__(self):
-        return "/dev/rfcomm%d" % self.number
+        return "BT channel %d" % self.number
 

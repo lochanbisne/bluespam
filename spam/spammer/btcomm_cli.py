@@ -1,4 +1,4 @@
-import os, re
+import sys, os, re
 
 
 class BTComm:
@@ -21,6 +21,7 @@ class BTComm:
         results = []
 
         device_r = re.compile("^Searching for OPUSH on (\w\w(:\w\w)+)")
+        srv_r = re.compile("OBEX Object Push")
         
         curdev = None
         supported = False
@@ -82,7 +83,7 @@ class BTComm:
     def send(self, device_id, number, channel, filename):
 
         # send file
-        cmd = "ussp-push %s@ %s %s" % (device_id, filename, filename.split("/")[-1])
+        cmd = "/usr/local/bin/ussp-push %s@ %s %s" % (device_id, "media/" + str(filename), str(filename).split("/")[-1])
         exitcode = os.system(cmd)
         print cmd
         print exitcode
@@ -96,7 +97,6 @@ class BTComm:
 
         cmd = "sudo rfcomm release %s 2>& 1 > /dev/null" % (rfcomm)
         exitcode = os.system(cmd)
-        return exitcode
         
 
 if __name__ == "__main__":

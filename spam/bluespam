@@ -1,0 +1,42 @@
+#!/usr/bin/python
+
+import sys
+from django.core.management import setup_environ
+
+import ConfigParser, os, sys, re, string, tempfile
+from optparse import OptionParser
+
+import settings
+
+def usage():
+    print "Usage: bluespam <command> [options]"
+    print
+    print "Commands:"
+    print
+    print "  schedule list - list all active schedules"
+    print "  schedule add  - add a file"
+    print "  schedule del  - delete a schedule"
+    print
+    sys.exit(1)
+
+if __name__ == "__main__":
+    setup_environ(settings)
+
+    parser = OptionParser()
+    #parser.add_option("-a", "--aggressive", action="store_true", help="Aggressive mode")
+
+    (options, args) = parser.parse_args()
+    
+    if len(args) < 1:
+        usage()
+
+
+    from spammer.cli import SpammerCLI
+
+    m = SpammerCLI()
+    try:
+        m[args[0]](args[1:], options)
+    except KeyError:
+        usage()
+
+    
