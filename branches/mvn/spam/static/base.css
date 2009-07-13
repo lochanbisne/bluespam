@@ -1,0 +1,33 @@
+body { width: 960px; margin: auto; margin-top: 40px; }
+.column { float: left; width: 480px; }
+hr { margin-top: 20px; }
+div.controls { float: right; }
+
+
+#heading h1  {
+}
+
+#heading img {
+	 border: 0;
+	 float: right;
+	 padding-bottom: 20px;
+}
+
+#heading { clear: both;
+	 padding-bottom: 10px;
+	 position: relative;
+	 height: 50px;
+	  }	   
+#heading .top {
+	 position: absolute;
+	 top: 20px;
+}
+
+body { 
+     font-family: Georgia, "Times new roman", serif;
+}
+
+body h1 {
+     font-style: italic;
+     color: black;
+}
