@@ -19,7 +19,7 @@ No active devices found... is the scanner running?
 <hr />
 
 
-<h2>Active schedules</h2>
+<h2>Active files</h2>
 {% if active_schedules %}
 <ul>
     {% for schedule in active_schedules %}

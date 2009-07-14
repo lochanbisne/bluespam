@@ -13,13 +13,20 @@ class ScheduleAdmin(admin.ModelAdmin):
         )
     pass
 
+class SpammerAdmin(admin.sites.AdminSite):
+    pass
+
+site = SpammerAdmin()
+
 # admin.site.register(DeviceSeenBy, admin.ModelAdmin)
 #admin.site.register(models.Blacklist, admin.ModelAdmin)
-admin.site.register(models.Schedule, ScheduleAdmin)
+site.register(models.Schedule, ScheduleAdmin)
 # admin.site.register(DeviceSent, admin.ModelAdmin)
 # admin.site.register(DeviceReceived, admin.ModelAdmin)
 
-admin.site.register(models.Device, admin.ModelAdmin)
+site.register(models.Device, admin.ModelAdmin)
 
 #admin.site.register(models.InterfaceName, admin.ModelAdmin)
 #admin.site.register(models.Channel, admin.ModelAdmin)
+
+admin.site = site

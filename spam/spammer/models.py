@@ -109,7 +109,6 @@ class Blacklist(models.Model):
 
 
 class Schedule(models.Model):
-    """ dddd """
     
     SCHEDULE_TYPE_CHOICES = (
         ('text', 'Text message (.txt)'),
