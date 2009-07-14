@@ -10,8 +10,10 @@
     <dt>Total sent: all files</dt>
     <dd>{% with sent_files as data %}{% include "stats_datacol.tpl" %}{% endwith %}</dd>
 
+    <hr />
+
     {% for stat in file_stats %}
-    <dt>Total sent:  {{ stat.file }}</dt>
+    <dt>Total sent for file:  <a href="/static/{{ stat.file }}">{{ stat.file }}</a></dt>
     <dd>{% with stat.sent as data %}{% include "stats_datacol.tpl" %}{% endwith %}</dd>
     {% endfor %}
 

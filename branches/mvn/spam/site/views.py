@@ -51,7 +51,7 @@ def stats(request):
           }
 
     for s in Schedule.objects.all():
-        c['file_stats'].append( { 'file': s, 'sent': stats_g(DeviceSent.objects.all().filter(exitcode = 0).filter(schedule = s), 'send_time')})
+        c['file_stats'].append( { 'file': s.datafile, 'sent': stats_g(DeviceSent.objects.all().filter(exitcode = 0).filter(schedule = s), 'send_time')})
 
     return render_to_response('stats.tpl', c)
 
