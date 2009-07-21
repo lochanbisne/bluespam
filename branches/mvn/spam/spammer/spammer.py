@@ -136,7 +136,6 @@ class SpammerMain:
             self.cleanup()
     
     def resetState(self):
-        self.bt.release()
         for d in Device.objects.filter(locked = True):
             self.log("Clearing lock on %s " % d)
             d.unlock()

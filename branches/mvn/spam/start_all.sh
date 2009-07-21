@@ -2,9 +2,9 @@
 
 avahi-publish-service "BlueSpam status" _http._tcp 80 &
 
-cd /opt/spam/tags/1.0/spam/
+cd /opt/spam/branches/mvn/spam/
 
-./init_rfcomm.sh
+# ./init_rfcomm.sh
 
 ./initialize
 ./start hci0 -a

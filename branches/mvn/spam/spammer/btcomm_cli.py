@@ -13,40 +13,6 @@ class BTComm:
         if interface:
             self.interface = interface
 
-    def find_obex_push(self):
-
-        cmd = "sdptool -i %s search OPUSH" % self.interface
-        fp = os.popen(cmd)
-
-        results = []
-
-        device_r = re.compile("^Searching for OPUSH on (\w\w(:\w\w)+)")
-        srv_r = re.compile("OBEX Object Push")
-        
-        curdev = None
-        supported = False
-        
-        while True:
-            l = fp.readline()
-            if not l: break
-            
-            m = device_r.match(l.strip())
-            if m:
-                # print m.groups()
-                if curdev is not None and supported:
-                    results.append(curdev)
-                curdev = m.groups()[0]
-                supported = False
-
-            if l.find("OBEX Object Push") >= 0 and curdev is not None:
-                supported = True
-        if curdev is not None and supported:
-            results.append(curdev)
-            
-        return results
-            
-
-
     def scan(self):
 
         cmd = "hcitool -i %s scan" % self.interface
@@ -92,12 +58,6 @@ class BTComm:
 
         return 0
 
-    def release(self):
-        rfcomm = "/dev/rfcomm%s" % self.interface[3]
-
-        cmd = "sudo rfcomm release %s 2>& 1 > /dev/null" % (rfcomm)
-        exitcode = os.system(cmd)
-        
 
 if __name__ == "__main__":
 
