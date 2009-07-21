@@ -33,7 +33,9 @@
 	{% endblock %}
 
 	<hr />
-	<p class="sub">Created by <a href="http://www.scherpenisse.net/">Arjan Scherpenisse</a> and <a href="http://www.mobilevideonet.com/">MobileVideoNet</a>. Software &copy;2008, 2009 Arjan Scherpenisse.<br />
+	<p class="sub">Created by <a href="http://www.mobilevideonet.com/">MobileVideoNet</a> and <a href="http://www.scherpenisse.net/">Arjan Scherpenisse</a>.</p>
+
+	<p class="sub"> Software &copy;2008, 2009 Arjan Scherpenisse.
 	This software is open source and released under the MIT license. <a href="http://code.google.com/p/bluespam/">Visit site for more info</a>.</p>
 
     </body>

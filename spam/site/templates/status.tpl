@@ -100,7 +100,7 @@ No devices...
 	Client rejected; blacklisting
 	{% endifequal %}
 	{% ifequal l.exitcode 768 %}
-	Aggressive mode, trying again soon
+	timeout / refuse; trying again soon.
 	{% endifequal %}
     </li>
     {% endfor %}
