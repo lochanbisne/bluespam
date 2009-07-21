@@ -13,6 +13,11 @@ class ScheduleAdmin(admin.ModelAdmin):
         )
     pass
 
+class DeviceAdmin(admin.ModelAdmin):
+    def has_add_permission(self, request):
+        return False
+
+
 class SpammerAdmin(admin.sites.AdminSite):
     pass
 
@@ -24,9 +29,9 @@ site.register(models.Schedule, ScheduleAdmin)
 # admin.site.register(DeviceSent, admin.ModelAdmin)
 # admin.site.register(DeviceReceived, admin.ModelAdmin)
 
-site.register(models.Device, admin.ModelAdmin)
+site.register(models.Device, DeviceAdmin)
 
-#admin.site.register(models.InterfaceName, admin.ModelAdmin)
+site.register(models.InterfaceName, admin.ModelAdmin)
 #admin.site.register(models.Channel, admin.ModelAdmin)
 
 admin.site = site

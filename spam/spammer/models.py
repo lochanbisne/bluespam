@@ -122,6 +122,10 @@ class Schedule(models.Model):
     def __str__(self):
         return "[%s]" % str(self.datafile).split('/')[-1]
 
+    class Meta:
+        verbose_name = "File"
+        verbose_name_plural = "Files"
+
 
 class DeviceSent(models.Model):
     device = models.ForeignKey(Device)

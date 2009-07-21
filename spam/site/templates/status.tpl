@@ -1,5 +1,11 @@
 {% extends "base_twocolumn.tpl" %}
 
+{% block extra_head %}
+	<script type="text/javascript">
+	    setTimeout(function() { window.location.reload(); }, 10000);
+	</script>
+{% endblock %}
+
 {% block column1 %}
 <h2>Active devices</h2>
 {% if active_devices %}
